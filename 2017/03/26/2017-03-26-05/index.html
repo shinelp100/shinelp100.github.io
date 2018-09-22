@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="shinelp100">
 <meta property="og:description" content="关于arr的数组排序的方法的探究，了解sort是怎么进行排序的">
 <meta property="og:locale" content="zh-cn">
-<meta property="og:updated_time" content="2018-09-19T03:18:02.162Z">
+<meta property="og:updated_time" content="2018-09-22T14:48:42.865Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="探索sort是怎么排序的">
 <meta name="twitter:description" content="关于arr的数组排序的方法的探究，了解sort是怎么进行排序的">
@@ -179,7 +179,9 @@
 <p><a href="http://bubkoo.com/2014/01/14/sort-algorithm/insertion-sort/" target="_blank" rel="noopener">原文</a></p>
 <h2 id="快速排序（不稳定排序算法）"><a href="#快速排序（不稳定排序算法）" class="headerlink" title="快速排序（不稳定排序算法）"></a>快速排序（不稳定排序算法）</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 1、找准基准点</span></span><br><span class="line"><span class="comment"> * 2、把所有比基准点小的数放左边大的数放右边</span></span><br><span class="line"><span class="comment"> * 3、递归调用自己</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * */</span></span><br><span class="line"> <span class="function"><span class="keyword">function</span> <span class="title">quickSort</span>(<span class="params">arr</span>)</span>&#123;</span><br><span class="line">     <span class="keyword">var</span> len = arr.length;</span><br><span class="line">     <span class="keyword">if</span>(len &lt;= <span class="number">1</span>) &#123;</span><br><span class="line">         <span class="keyword">return</span> arr;</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="keyword">var</span> leftArr=[],rightArr=[];</span><br><span class="line">     <span class="keyword">var</span> pivot = <span class="built_in">Math</span>.floor(len/<span class="number">2</span>);</span><br><span class="line">     <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>;i&lt;len;i++)&#123;</span><br><span class="line">         <span class="keyword">if</span>(arr[i]&lt;arr[pivot])&#123;</span><br><span class="line">             leftArr.push(arr[i]);</span><br><span class="line">         &#125; <span class="keyword">else</span> <span class="keyword">if</span>(arr[i]&gt;arr[pivot])&#123;</span><br><span class="line">             rightArr.push(arr[i]);</span><br><span class="line">         &#125;</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="keyword">return</span> quickSort(leftArr).concat(arr[pivot],quickSort(rightArr));</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="keyword">var</span> aa = quickSort([<span class="number">22</span>,<span class="number">3</span>,<span class="number">42</span>,<span class="number">12</span>,<span class="number">123</span>,<span class="number">123</span>,<span class="number">211</span>,<span class="number">23221</span>,<span class="number">22</span>,<span class="number">2</span>,<span class="number">12</span>]);</span><br><span class="line"> <span class="built_in">console</span>.log(aa);<span class="comment">//[2, 3, 12, 22, 42, 123, 211, 23221]去重排序</span></span><br></pre></td></tr></table></figure>
 <p><a href="http://bubkoo.com/2014/01/12/sort-algorithm/quick-sort/" target="_blank" rel="noopener">快速排序参考</a></p>
-
+<h4 id="4-冒泡排序法"><a href="#4-冒泡排序法" class="headerlink" title="4.冒泡排序法"></a>4.冒泡排序法</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* 冒泡排序法</span></span><br><span class="line"><span class="comment">* 两两比较把最大的沉到最低</span></span><br><span class="line"><span class="comment">* n*(n-1)/2</span></span><br><span class="line"><span class="comment">* */</span></span><br><span class="line"> <span class="function"><span class="keyword">function</span> <span class="title">bubbleSort</span>(<span class="params">arr</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> len = arr.length;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; len;i++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">let</span> j = <span class="number">0</span> ;j&lt;len<span class="number">-1</span>-i;j++) &#123;</span><br><span class="line">            <span class="keyword">if</span>(arr[j]&gt;arr[j+<span class="number">1</span>]) &#123;</span><br><span class="line">                [arr[j],arr[j+<span class="number">1</span>]] = [arr[j+<span class="number">1</span>],arr[j]];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> arr;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="4-1冒泡排序法优化"><a href="#4-1冒泡排序法优化" class="headerlink" title="4.1冒泡排序法优化"></a>4.1冒泡排序法优化</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* &lt;=n*(n-1)/2</span></span><br><span class="line"><span class="comment">* 看要排序的数组的空间复杂度</span></span><br><span class="line"><span class="comment">* */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bubbleSort</span>(<span class="params">arr</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> i = arr.length,pos;</span><br><span class="line">    <span class="keyword">while</span>(i&gt;<span class="number">0</span>) &#123;</span><br><span class="line">        pos = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">let</span> j = <span class="number">0</span>;j&lt;i;j++) &#123;</span><br><span class="line">            <span class="keyword">if</span>(arr[j]&gt;arr[j+<span class="number">1</span>]) &#123;</span><br><span class="line">                pos = j;</span><br><span class="line">                [arr[j],arr[j+<span class="number">1</span>]] = [arr[j+<span class="number">1</span>],arr[j]];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        i = pos;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> arr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="5-选择排序法"><a href="#5-选择排序法" class="headerlink" title="5.选择排序法"></a>5.选择排序法</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* 选择排序法</span></span><br><span class="line"><span class="comment">* 选择最小的数放到数组最前面</span></span><br><span class="line"><span class="comment">* n*(n-1)/2</span></span><br><span class="line"><span class="comment">* */</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">selectionSort</span>(<span class="params">arr</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> minIndex,</span><br><span class="line">        len = arr.length;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">0</span>;i&lt;len;i++)&#123;</span><br><span class="line">        minIndex = i;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">let</span> j = i+<span class="number">1</span>;j&lt;len;j++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(arr[j]&lt;arr[minIndex])&#123;</span><br><span class="line">                minIndex = j;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        [arr[i],arr[minIndex]] = [arr[minIndex],arr[i]];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> arr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
       
 
       
@@ -430,15 +432,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Markdown</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">git</a>
+                <a href="javascript:void(0)" class="js-tag color4">Markdown</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -450,15 +448,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">水印</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">https status</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">排序</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">水印</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -475,6 +473,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">shuffle、洗牌算法</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">git</a>
               </li>
             
             <div class="clearfix"></div>

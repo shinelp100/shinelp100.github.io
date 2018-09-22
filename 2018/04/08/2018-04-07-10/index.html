@@ -16,12 +16,10 @@
 <meta property="og:site_name" content="shinelp100">
 <meta property="og:description" content="关于gulp+webpack的初次合并尝试">
 <meta property="og:locale" content="zh-cn">
-<meta property="og:image" content="https://raw.githubusercontent.com/shinelp100/phaser/master/h5%E4%B8%8B%E8%BD%BD/1.gif">
-<meta property="og:updated_time" content="2018-09-19T03:19:44.958Z">
+<meta property="og:updated_time" content="2018-09-22T11:07:59.254Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="gulp+webpack使用">
 <meta name="twitter:description" content="关于gulp+webpack的初次合并尝试">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/shinelp100/phaser/master/h5%E4%B8%8B%E8%BD%BD/1.gif">
   
     <link rel="alternative" href="/atom.xml" title="shinelp100" type="application/atom+xml">
   
@@ -179,7 +177,7 @@
 <p>代码如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">gulp.task(<span class="string">'webpack-watch'</span>, () =&gt; &#123;</span><br><span class="line">    <span class="keyword">return</span> gulp.src(<span class="string">'./source/js/**/*.js'</span>, &#123;<span class="attr">base</span>: <span class="string">'src'</span>&#125;)</span><br><span class="line">    <span class="comment">// 使用webpack配置文件，详细见下</span></span><br><span class="line">        .pipe(vinylNamed(<span class="function">(<span class="params">file</span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">var</span> dir = path.dirname(file.path);</span><br><span class="line">            <span class="comment">// 替换掉 source 目录路径</span></span><br><span class="line">            dir = dir.replace(<span class="regexp">/^.*source(\\|\/)/</span>, <span class="string">''</span>);</span><br><span class="line">            <span class="built_in">console</span>.log(path.join(dir, path.basename(file.path, path.extname(file.path))));</span><br><span class="line">            <span class="comment">// 将文件路径及 basename 作为 name</span></span><br><span class="line">            <span class="keyword">return</span> path.join(dir, path.basename(file.path, path.extname(file.path)));</span><br><span class="line">        &#125;))</span><br><span class="line">        <span class="comment">//防止文件在编译时报错而退出监听</span></span><br><span class="line">        .pipe(plumber())</span><br><span class="line">        .pipe(webpackStream(config))</span><br><span class="line">        .pipe(gulp.dest(<span class="string">'./src'</span>))</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
 <a id="more"></a>
 <p>2、src下文件的监听</p>
-<p>在构建的过程中发现，文件对应打包发布没问题了，可是开发环境却出问题了，问题点主要在对应的html文件中引入的还是less文件（很是尴尬）、对应拥有依赖的js文件直接报错（浏览器不认识require和import）<br>怎么解决这样的问题呢？细心地小伙伴会发现上面的代码gulp.dest(‘./src’)为啥会发布到src下而不是dist下呢？<br><br>如下图：<br><img src="https://raw.githubusercontent.com/shinelp100/phaser/master/h5%E4%B8%8B%E8%BD%BD/1.gif" alt="微信截图"></p>
+<p>在构建的过程中发现，文件对应打包发布没问题了，可是开发环境却出问题了，问题点主要在对应的html文件中引入的还是less文件（很是尴尬）、对应拥有依赖的js文件直接报错（浏览器不认识require和import）<br>怎么解决这样的问题呢？细心地小伙伴会发现上面的代码gulp.dest(‘./src’)为啥会发布到src下而不是dist下呢？<br><br>如下图：<br><img src="" alt="微信截图"></p>
 <p>其实你会发现src平级对应还有个source目录这是对应的less、有依赖的js文件（使用了require或import语法）。为了实现在src开发，在dist下发布上线<br><br>代码如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//less watch</span></span><br><span class="line">gulp.task(<span class="string">'less-watch'</span>, () =&gt; &#123;</span><br><span class="line">    <span class="keyword">return</span> gulp.src(<span class="string">'./source/**/*.less'</span>, &#123;<span class="attr">base</span>: <span class="string">'source'</span>&#125;)</span><br><span class="line">        .pipe(less())</span><br><span class="line">        .pipe(plumber())</span><br><span class="line">        .pipe(gulp.dest(<span class="string">'./src'</span>))</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// js(es6) watch如上</span></span><br></pre></td></tr></table></figure></p>
 <p>3、如何把带有md5戳的js、css、img文件映射到html中</p>
 <p>gulp-rev作用：其中rev()用于给文件名扩展名前增加一个md5后缀<br>gulp-rev-replace作用：用于替换html中对应manifest.json中的映射</p>
@@ -439,15 +437,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Markdown</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">git</a>
+                <a href="javascript:void(0)" class="js-tag color4">Markdown</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -459,15 +453,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">水印</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">https status</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">排序</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">水印</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -484,6 +478,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">shuffle、洗牌算法</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">git</a>
               </li>
             
             <div class="clearfix"></div>

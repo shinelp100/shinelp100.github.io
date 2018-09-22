@@ -16,12 +16,12 @@
 <meta property="og:site_name" content="shinelp100">
 <meta property="og:description" content="一次运营活动的启发萌生这样的尝试">
 <meta property="og:locale" content="zh-cn">
-<meta property="og:image" content="http://yoursite.com/assets/img/170517.gif">
-<meta property="og:updated_time" content="2018-09-19T03:17:20.982Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/shinelp100/phaser/master/h5%E4%B8%8B%E8%BD%BD/1.gif">
+<meta property="og:updated_time" content="2018-09-22T11:07:59.244Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="给自己的图片打水印">
 <meta name="twitter:description" content="一次运营活动的启发萌生这样的尝试">
-<meta name="twitter:image" content="http://yoursite.com/assets/img/170517.gif">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/shinelp100/phaser/master/h5%E4%B8%8B%E8%BD%BD/1.gif">
   
     <link rel="alternative" href="/atom.xml" title="shinelp100" type="application/atom+xml">
   
@@ -174,7 +174,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h4 id="给自己的图片上个水印吧"><a href="#给自己的图片上个水印吧" class="headerlink" title="给自己的图片上个水印吧"></a>给自己的图片上个水印吧</h4><ul>
-<li>效果如下（每当上传一张图内心都是不忍的，何况是gif）：<br><img src="/assets/img/170517.gif" alt="微信截图"><a id="more"></a>
+<li>效果如下（每当上传一张图内心都是不忍的，何况是gif）：<br><img src="https://raw.githubusercontent.com/shinelp100/phaser/master/h5%E4%B8%8B%E8%BD%BD/1.gif" alt="微信截图"><a id="more"></a>
 思路：canvas绘制img+文字=&gt;图文canvas=&gt;canvas转化为img（toDataURL方法）<br><br>js代码如下：<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.onload = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        changeWatermark();</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">changeWatermark</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> ctn = <span class="built_in">document</span>.getElementById(<span class="string">"ctn"</span>).value;</span><br><span class="line">        <span class="keyword">var</span> canvas = <span class="built_in">document</span>.getElementById(<span class="string">"myCanvas"</span>);</span><br><span class="line">        <span class="keyword">var</span> a = <span class="keyword">new</span> watermark(ctn,canvas);</span><br><span class="line">        a.addWatermark(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">            a.convertCanvasToImage()</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*水印方法*/</span></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">watermark</span>(<span class="params">ctn,canvas</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.ctn = ctn || <span class="string">""</span>;</span><br><span class="line">        <span class="keyword">this</span>.canvas = canvas || <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*添加水印操作*/</span></span><br><span class="line">    watermark.prototype.addWatermark = <span class="function"><span class="keyword">function</span> (<span class="params">callback</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> img = <span class="keyword">new</span> Image();</span><br><span class="line">        img.src = <span class="string">'1.png'</span>;</span><br><span class="line">        <span class="keyword">var</span> that = <span class="keyword">this</span>;</span><br><span class="line">        img.onload = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> hx = that.canvas.height<span class="number">-20</span>;</span><br><span class="line">            <span class="keyword">var</span> wx = that.canvas.width<span class="number">-20</span>;</span><br><span class="line">            <span class="keyword">var</span> ctx = that.canvas.getContext(<span class="string">"2d"</span>);</span><br><span class="line">            ctx.drawImage(img, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">            ctx.font = <span class="string">"40px microsoft yahei"</span>;</span><br><span class="line">            ctx.textAlign=<span class="string">"right"</span>;</span><br><span class="line">            <span class="keyword">var</span> gradient=ctx.createLinearGradient(<span class="number">0</span>,<span class="number">0</span>,that.canvas.width,<span class="number">0</span>);</span><br><span class="line">            gradient.addColorStop(<span class="string">"0"</span>,<span class="string">"blue"</span>);</span><br><span class="line">            gradient.addColorStop(<span class="string">"0.5"</span>,<span class="string">"yellow"</span>);</span><br><span class="line">            gradient.addColorStop(<span class="string">"1.0"</span>,<span class="string">"red"</span>);</span><br><span class="line">            ctx.fillStyle=gradient;</span><br><span class="line">            ctx.fillText(that.ctn,wx,hx,wx);</span><br><span class="line">            <span class="keyword">if</span>(<span class="keyword">typeof</span> callback === <span class="string">"function"</span>)&#123;</span><br><span class="line">                callback();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*canvas水印转化为图片*/</span></span><br><span class="line">    watermark.prototype.convertCanvasToImage = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> container = <span class="built_in">document</span>.getElementById(<span class="string">'picContainer'</span>);</span><br><span class="line">        <span class="keyword">var</span> img = <span class="built_in">document</span>.createElement(<span class="string">'img'</span>);</span><br><span class="line">        img.src = <span class="keyword">this</span>.canvas.toDataURL(<span class="string">"image/png"</span>);</span><br><span class="line">        <span class="keyword">this</span>.canvas.style.display = <span class="string">"none"</span>;</span><br><span class="line">        <span class="keyword">var</span> deleteImg = <span class="built_in">document</span>.querySelectorAll(<span class="string">"#picContainer img"</span>);</span><br><span class="line">        <span class="keyword">if</span>(!!deleteImg)&#123;</span><br><span class="line">            deleteImg.forEach(<span class="function"><span class="keyword">function</span> (<span class="params">t</span>) </span>&#123;</span><br><span class="line">                container.removeChild(t)</span><br><span class="line">            &#125;)</span><br><span class="line">        &#125;</span><br><span class="line">        container.appendChild(img);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
@@ -430,15 +430,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Markdown</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">git</a>
+                <a href="javascript:void(0)" class="js-tag color4">Markdown</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -450,15 +446,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">水印</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">https status</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">排序</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">水印</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -475,6 +471,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">shuffle、洗牌算法</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">git</a>
               </li>
             
             <div class="clearfix"></div>
